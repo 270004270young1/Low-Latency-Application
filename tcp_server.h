@@ -1,48 +1,42 @@
 #pragma once
+
 #include "tcp_socket.h"
-namespace Common{
-    struct TCPServer{
-        public:
-            int efd_ = -1;
-            TCPSocket listener_socket_;
-            epoll_event events_[1024];
-            std::vector<TCPSocket *> sockets_, receive_sockets_,send_sockets_,disconnected_sockets_;
-            std::function<void(TCPSocket *s, Nanos rx_time)> recv_callback_;
-            std::function<void()> recv_finished_callback_;
-            std::string time_str_;
-            Logger &logger_;
 
-        //    auto defaultRecvCallback(TCPSocket *socket, Nanos rx_time) noexcept{
+namespace Common {
+  struct TCPServer {
+    explicit TCPServer(Logger &logger)
+        : listener_socket_(logger), logger_(logger) {
+    }
 
-        //         logger_.log("%:% %() % TCPServer::defaultRecvCallback() socket:% len:% rx:%\n",__FILE__,__LINE__,__FUNCTION__,Common::getCurrentTimeStr(&time_str_), socket->fd_, socket->next_rcv_valid_index_,rx_time);
-            
-        //     }
-        //     auto defaultRecvFinishedCallback() noexcept{
-        //         logger_.log("%:% %() % TCPServer::defaultRecvFinishedCallback()\n",__FILE__,__LINE__,__FUNCTION__,Common::getCurrentTimeStr(&time_str_));
-        //     }
-            auto destroy();
+    /// Start listening for connections on the provided interface and port.
+    auto listen(const std::string &iface, int port) -> void;
 
-            explicit TCPServer(Logger &logger):listener_socket_(logger),logger_(logger){}
+    /// Check for new connections or dead connections and update containers that track the sockets.
+    auto poll() noexcept -> void;
 
-            auto epoll_add(TCPSocket *socket);
+    /// Publish outgoing data from the send buffer and read incoming data from the receive buffer.
+    auto sendAndRecv() noexcept -> void;
 
-            auto epoll_del(TCPSocket *socket);
+  private:
+    /// Add and remove socket file descriptors to and from the EPOLL list.
+    auto addToEpollList(TCPSocket *socket);
 
-            auto del(TCPSocket *socket);
+  public:
+    /// Socket on which this server is listening for new connections on.
+    int epoll_fd_ = -1;
+    TCPSocket listener_socket_;
 
-            auto listen(const std::string &iface, int port) -> void;
+    epoll_event events_[1024];
 
+    /// Collection of all sockets, sockets for incoming data, sockets for outgoing data and dead connections.
+    std::vector<TCPSocket *> receive_sockets_, send_sockets_;
 
-            auto poll() noexcept->void;
+    /// Function wrapper to call back when data is available.
+    std::function<void(TCPSocket *s, Nanos rx_time)> recv_callback_ = nullptr;
+    /// Function wrapper to call back when all data across all TCPSockets has been read and dispatched this round.
+    std::function<void()> recv_finished_callback_ = nullptr;
 
-            
-
-            auto sendAndRecv() noexcept -> void;
-
-            TCPServer() = delete;
-            TCPServer(const TCPServer &) = delete;
-            TCPServer(const TCPServer &&) = delete;
-            TCPServer &operator=(const TCPServer &) = delete;
-            TCPServer &operator=(const TCPServer &&) = delete;
-    };
+    std::string time_str_;
+    Logger &logger_;
+  };
 }
