@@ -21,6 +21,8 @@ namespace Common{
 
     constexpr int MaxTCPServerBacklog = 1024;
     auto getIFaceIP(const std::string &iface) -> std::string;
+    auto getIFaceIP(Logger &logger,const std::string &iface) -> std::string;
+
     auto setNonBlocking(int fd)->bool;
     auto setNoDelay(int fd)->bool;
     auto setSOTimestamp(int fd)->bool;

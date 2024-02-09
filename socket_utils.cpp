@@ -5,7 +5,7 @@ namespace Common{
         char buf[NI_MAXHOST] = {'\0'};
         ifaddrs *ifaddr = nullptr;
         if(getifaddrs(&ifaddr)!=-1){
-            for(ifaddrs *ifa = ifaddr;ifa;ifa->ifa_next){
+            for(ifaddrs *ifa = ifaddr;ifa; ifa = ifa->ifa_next){
                 
                 if(ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET && iface == ifa->ifa_name){
                     getnameinfo(ifa->ifa_addr,sizeof(sockaddr_in),buf,sizeof(buf),NULL,0,NI_NUMERICHOST);
@@ -55,7 +55,7 @@ namespace Common{
     auto createSocket(Logger &logger,const std::string &t_ip,const std::string &iface, int port, bool  is_udp,bool is_blocking, bool is_listening,int ttl,bool needs_so_timestamp)->int{
 
         std::string time_str;
-        logger.log("Prepare to get interface\n");
+        //logger.log("Prepare to get interface\n");
         const auto ip = t_ip.empty()?getIFaceIP(iface):t_ip;
         logger.log("%:%:%() % ip:% iface:% port:% is_udp:% is_blocking:% is_listening:% ttl:% SO_time:%\n",__FILE__,__LINE__,__FUNCTION__,Common::getCurrentTimeStr(&time_str),ip,iface,port,is_udp,is_blocking,is_listening,ttl,needs_so_timestamp);
 

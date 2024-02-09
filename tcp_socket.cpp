@@ -10,10 +10,10 @@ namespace Common{
     auto TCPSocket::connect(const std::string &ip, const std::string &iface, int port, bool is_listening) -> int{
         destroy();
         
-        logger_.log("Prepare to connect\n");
+        //logger_.log("Prepare to connect\n");
         fd_ = createSocket(logger_,ip,iface,port,false,false,
         is_listening,0,true);
-        logger_.log("CreateSocket fd_:%\n",fd_);
+        //logger_.log("CreateSocket fd_:%\n",fd_);
         inInAddr.sin_addr.s_addr = INADDR_ANY;
         inInAddr.sin_port = htons(port);
         inInAddr.sin_family = AF_INET;
