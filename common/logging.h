@@ -133,7 +133,7 @@ namespace Common{
                 while(*s){
 
                     if(*s=='%'){
-                        if(UNLIKEY(*(s+1)=='%')){
+                        if(UNLIKELY(*(s+1)=='%')){
                             ++s;
                         }else{
                             pushValue(value);
@@ -151,7 +151,7 @@ namespace Common{
                 while(*s){
 
                     if(*s=='%'){
-                        if(UNLIKEY(*(s+1)=='%')){
+                        if(UNLIKELY(*(s+1)=='%')){
                             ++s;
                         }else{
                             FATAL("missing arguments to log()");

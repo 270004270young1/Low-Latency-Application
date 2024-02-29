@@ -3,11 +3,11 @@
 #include <cstring>
 #include <iostream>
 
-#define LIKEY(x) __builtin_expect(!!(x),1)
-#define UNLIKEY(x) __builtin_expect(!!(x),0)
+#define LIKELY(x) __builtin_expect(!!(x),1)
+#define UNLIKELY(x) __builtin_expect(!!(x),0)
 
 inline auto ASSERT(bool cond, const std::string &msg) noexcept{
-    if(UNLIKEY(!cond)){
+    if(UNLIKELY(!cond)){
         std::cerr<<"ASSERT : "<<msg<<std::endl;
         exit(EXIT_FAILURE);
     }

@@ -6,7 +6,7 @@ namespace Common{
         close(fd_);
         fd_ = -1;
     }
-
+    
     auto TCPSocket::connect(const std::string &ip, const std::string &iface, int port, bool is_listening) -> int{
         destroy();
         
@@ -63,7 +63,7 @@ namespace Common{
             auto n_send_this_msg = std::min(static_cast<ssize_t>(next_send_valid_index_),n_send);
             const int flags = MSG_DONTWAIT | MSG_NOSIGNAL | (n_send_this_msg < n_send? MSG_MORE : 0);
             auto n = ::send(fd_,send_buffer_,n_send_this_msg,flags);
-            if(UNLIKEY(n < 0)){
+            if(UNLIKELY(n < 0)){
                 if(!wouldBlock())
                     send_disconnected_ = true;
                 break;

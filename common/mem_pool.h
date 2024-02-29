@@ -20,11 +20,11 @@ namespace Common{
                 const auto initial_free_index = next_free_index_;
                 while(!store_[next_free_index_].is_free_){
                     ++next_free_index_;
-                    if(UNLIKEY(next_free_index_==store_.size())){
+                    if(UNLIKELY(next_free_index_==store_.size())){
                         next_free_index_ = 0;
                     }
 
-                    if(UNLIKEY(initial_free_index==next_free_index_)){
+                    if(UNLIKELY(initial_free_index==next_free_index_)){
                         ASSERT(initial_free_index!=next_free_index_,"Memory Pool out of space.");
                     }
                 }
