@@ -39,4 +39,7 @@ namespace Exchange{
         }
     };
 
+#pragma pack(pop)
+    typedef LFQueue<MEClientRequest> ClientRequestLFQueue;
+
 }
